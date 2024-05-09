@@ -26,7 +26,6 @@ export const login = async (req, res) => {
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password)
 
-    console.log('a')
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
@@ -34,7 +33,7 @@ export const login = async (req, res) => {
     const token = createToken(user._id)
     res.cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
 
-    return res.status(200).json({ user: { id: user._id, username: user.username }, message: 'Logged in successfully' })
+    return res.status(200).json({ user: { id: user._id, username: user.username, email: user.email }, message: 'Logged in successfully' })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -76,6 +75,7 @@ export const register = async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
+        email: user.email,
       },
       message: 'User created successfully',
     })

@@ -3,6 +3,7 @@ import authRoutes from './routes/authRoutes.js'
 import dotenv from 'dotenv'
 import { connectToDatabase } from './database/connectToDB.js'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
 //Express app
 const app = Express()
@@ -11,6 +12,7 @@ const app = Express()
 dotenv.config()
 app.use(Express.json())
 app.use(cookieParser())
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
 
 //Endpoints
 app.use('/api/auth', authRoutes)
