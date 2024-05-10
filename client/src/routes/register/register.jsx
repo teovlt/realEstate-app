@@ -1,12 +1,14 @@
 import './register.scss'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import axiosConfig from '../../lib/axiosConfig'
+import { AuthContext } from '../../context/authContext'
 
 function Register() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { updateUser } = useContext(AuthContext)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -26,7 +28,7 @@ function Register() {
         password,
       })
 
-      localStorage.setItem('user', JSON.stringify(res.data.user))
+      updateUser(res.data.user)
 
       navigate('/')
     } catch (error) {
