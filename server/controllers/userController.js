@@ -6,15 +6,15 @@ export const getAllUsers = async (req, res) => {
 
     return res.status(200).json(users)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json({ error: error.message })
   }
 }
 
 export const getUser = async (req, res) => {
-  try {
-    const id = req.params.id
+  const id = req.params.id
 
-    const user = await User.findById(id)
+  try {
+    const user = await User.findById({ _id: id })
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
@@ -22,7 +22,7 @@ export const getUser = async (req, res) => {
 
     return res.status(200).json(user)
   } catch (error) {
-    return res.status(500).json(error.message)
+    return res.status(500).json({ error: error.message })
   }
 }
 
@@ -31,5 +31,15 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-  res.send('Delete user')
+  const id = req.params.id
+
+  try {
+    const user = await User.findOneAndDelete({ _id: id })
+    if (!user) {
+      return res.status(400).json({ error: 'No such user' })
+    }
+    res.status(200).json(user)
+  } catch (error) {
+    return res.status(500).json({ error: error.message })
+  }
 }
