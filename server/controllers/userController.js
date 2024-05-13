@@ -27,6 +27,8 @@ export const getUser = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
+  const id = req.params.id
+
   try {
     if (req.body.password) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10)
