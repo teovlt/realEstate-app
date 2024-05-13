@@ -27,7 +27,21 @@ export const getUser = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-  res.send('Update user')
+  try {
+    if (req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10)
+      req.body.password = hashedPassword
+    }
+    const user = await User.findOneAndUpdate({ _id: id }, { ...req.body })
+
+    if (!user) {
+      return res.status(400).json({ error: 'No such user' })
+    }
+
+    res.status(200).json(user)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 }
 
 export const deleteUser = async (req, res) => {
