@@ -19,7 +19,7 @@ const postSchema = mongoose.Schema(
       type: Array,
       required: true,
     },
-    adress: {
+    address: {
       type: String,
       required: true,
     },
@@ -27,11 +27,11 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    bedroom: {
+    bedrooms: {
       type: Number,
       required: true,
     },
-    bathroom: {
+    bathrooms: {
       type: Number,
       required: true,
     },
