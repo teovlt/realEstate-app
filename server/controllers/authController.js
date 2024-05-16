@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 const maxAge = 3 * 24 * 60 * 60 * 1000
 
 const createToken = (id) => {
-  return jwt.sign({ id: id }, process.env.JWT_SECRET, { expiresIn: maxAge + 'ms' })
+  return jwt.sign({ id: id, isAdmin: false }, process.env.JWT_SECRET, { expiresIn: maxAge + 'ms' })
 }
 
 export const login = async (req, res) => {
@@ -31,9 +31,10 @@ export const login = async (req, res) => {
     }
 
     const token = createToken(user._id)
-    res.cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
-
-    return res.status(200).json({ user: { id: user._id, username: user.username, email: user.email }, message: 'Logged in successfully' })
+    return res
+      .cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
+      .status(200)
+      .json({ user: { id: user._id, username: user.username, email: user.email }, message: 'Logged in successfully' })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -69,16 +70,17 @@ export const register = async (req, res) => {
     })
 
     const token = createToken(user._id)
-    res.cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
-
-    return res.status(201).json({
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
-      message: 'User created successfully',
-    })
+    return res
+      .cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
+      .status(201)
+      .json({
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+        message: 'User created successfully',
+      })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
