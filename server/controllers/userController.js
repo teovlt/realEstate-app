@@ -36,25 +36,35 @@ export const getUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   const id = req.params.id
   const tokenUserId = req.userId
+  const { password, avatar, ...inputs } = req.body
 
   if (id !== tokenUserId) {
     return res.status(403).json({ message: 'Not Authorized!' })
   }
 
   try {
-    if (req.body.password) {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10)
-      req.body.password = hashedPassword
+    let updatedPassword = null
+    if (password) {
+      updatedPassword = await bcrypt.hash(req.body.password, 10)
     }
-    const user = await User.findOneAndUpdate({ _id: id }, { ...req.body })
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { ...inputs, ...(updatedPassword && { password: updatedPassword }), ...(avatar && { avatar }) }
+    )
 
     if (!user) {
       return res.status(400).json({ error: 'No such user' })
     }
 
-    res.status(200).json(user)
-  } catch (err) {
-    res.status(500).json({ error: err.message })
+    res.status(200).json({
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
   }
 }
 

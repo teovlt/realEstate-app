@@ -18,7 +18,7 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
 
 //Endpoints
 app.use('/api/auth', authRoutes)
-app.use('/api/user', userRoutes)
+app.use('/api/users', userRoutes)
 app.use('/api/post', postRoutes)
 
 //Server
