@@ -3,9 +3,11 @@ import './profileUpdatePage.scss'
 import { AuthContext } from '../../context/authContext'
 import axiosConfig from '../../lib/axiosConfig'
 import { useNavigate } from 'react-router-dom'
+import UploadWidget from '../../components/upload/uploadWidget'
 
 function ProfileUpdatePage() {
   const { currentUser, updateUser } = useContext(AuthContext)
+  const [avatar, setAvatar] = useState(currentUser.avatar)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
@@ -23,6 +25,7 @@ function ProfileUpdatePage() {
         username,
         email,
         password,
+        avatar,
       })
 
       updateUser(res.data.user)
@@ -58,7 +61,11 @@ function ProfileUpdatePage() {
         </form>
       </div>
       <div className='sideContainer'>
-        <img src={currentUser.avatar || '/noavatar.jpg'} alt='' className='avatar' />
+        <img src={avatar || '/noavatar.jpg'} alt='' className='avatar' />
+        {/* <UploadWidget
+          uwConfig={{ cloudName: 'villett', uploadPreset: 'estate-app', multiple: false, maxImageFileSize: 2000000, folder: 'avatars' }}
+          setAvatar={setAvatar}
+        /> */}
       </div>
     </div>
   )

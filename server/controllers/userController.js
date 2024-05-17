@@ -48,7 +48,11 @@ export const updateUser = async (req, res) => {
       updatedPassword = await bcrypt.hash(req.body.password, 10)
     }
 
-    const user = await User.findOneAndUpdate({ _id: id }, { ...inputs, ...(password && { password: updatedPassword }) }, { new: true })
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { ...inputs, ...(password && { password: updatedPassword }), ...(avatar && { avatar }) },
+      { new: true }
+    )
 
     if (!user) {
       return res.status(400).json({ error: 'No such user' })
@@ -59,6 +63,7 @@ export const updateUser = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        avatar: user.avatar,
       },
     })
   } catch (error) {
