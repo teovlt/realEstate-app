@@ -47,10 +47,8 @@ export const updateUser = async (req, res) => {
     if (password) {
       updatedPassword = await bcrypt.hash(req.body.password, 10)
     }
-    const user = await User.findOneAndUpdate(
-      { _id: id },
-      { ...inputs, ...(updatedPassword && { password: updatedPassword }), ...(avatar && { avatar }) }
-    )
+
+    const user = await User.findOneAndUpdate({ _id: id }, { ...inputs, ...(password && { password: updatedPassword }) }, { new: true })
 
     if (!user) {
       return res.status(400).json({ error: 'No such user' })
