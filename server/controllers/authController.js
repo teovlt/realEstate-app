@@ -34,7 +34,7 @@ export const login = async (req, res) => {
     return res
       .cookie('token', token, { httpOnly: true, maxAge: maxAge, sameSite: 'Lax', secure: true })
       .status(200)
-      .json({ user: { id: user._id, username: user.username, email: user.email }, message: 'Logged in successfully' })
+      .json({ user: { id: user._id, username: user.username, email: user.email, avatar: user.avatar }, message: 'Logged in successfully' })
   } catch (error) {
     return res.status(500).json({ message: error.message })
   }
@@ -78,6 +78,7 @@ export const register = async (req, res) => {
           id: user._id,
           username: user.username,
           email: user.email,
+          avatar: user.avatar,
         },
         message: 'User created successfully',
       })
